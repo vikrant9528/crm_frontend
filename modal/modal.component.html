@@ -1,0 +1,117 @@
+<div *ngIf="open" class="fixed inset-0 flex items-center justify-center z-50">
+  <!-- backdrop -->
+  <div class="fixed inset-0 bg-gray-500/75 transition-opacity" (click)="close()"></div>
+
+  <!-- dialog panel -->
+  <div class="relative bg-white rounded-lg shadow-xl transform transition-all w-full max-w-lg mx-auto p-6">
+    <!-- header -->
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">
+          Edit or Update the Lead Details
+        </h2>
+        <!-- <p class="text-sm text-gray-600">
+          Configure your question settings including text, probe context, and probe limits.
+        </p> -->
+      </div>
+      <button type="button" class="text-gray-400 hover:text-gray-600" (click)="close()">
+        ✕
+      </button>
+    </div>
+
+    <!-- form content -->
+    <div class="space-y-6" [formGroup]="editForm">
+      <div class="grid grid-cols-2 gap-4">
+        <label class="block text-sm text-gray-700">
+          Email
+          <input type="email" formControlName="email" class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" />
+        </label>
+        <label class="block text-sm text-gray-700">
+          Phone
+          <input type="number" formControlName="phone" class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" />
+        </label>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <label class="block text-sm text-gray-700">
+          Name
+          <input type="text" formControlName="name" class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" />
+        </label>
+        <label class="block text-sm text-gray-700">
+          Budget
+          <input formControlName="budget" type="text" class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" />
+        </label>
+      </div>
+
+      <div class="space-y-6">
+
+
+        <label class="block text-sm text-gray-700">
+          Remarks
+          <textarea formControlName="notes" rows="4"
+            class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50"></textarea>
+        </label>
+
+        <div class="grid grid-cols-2 gap-4">
+          <label class="block text-sm text-gray-700">
+            Status
+            <select class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" formControlName="status">
+              <option *ngFor="let st of status" [value]="st.value">{{st.name}}</option>
+            </select>
+          </label>
+
+          <label *ngIf="authData.role !== 'employee'" class="block text-sm text-gray-700">
+            assignedTo
+            <select class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" formControlName="assignedTo">
+              <option *ngFor="let it of list" [value]="it._id">{{it.name}}</option>
+            </select>
+          </label>
+
+          <label class="block text-sm text-gray-700">
+            followUp
+            <input type="date" formControlName="followUp" class="mt-1 w-full rounded-md border px-3 py-2 bg-gray-50" />
+          </label>
+        </div>
+
+        <div class="flex justify-between items-center">
+          <div class="w-fit h-fit">
+            <!-- <button class="px-4 py-2 rounded-md border bg-red-500 text-white hover:bg-red-600">
+              Show Timeline
+            </button> -->
+          </div>
+          <div class="flex justify-end gap-3 border-t">
+            <button class="px-4 py-2 rounded-md border bg-white text-gray-700 hover:bg-gray-100" (click)="close()">
+              Cancel
+            </button>
+            <button class="px-4 py-2 rounded-md bg-gray-900 text-white hover:bg-gray-800" (click)="confirm()">
+              Save
+            </button>
+          </div>
+        </div>
+
+        <!-- <div class="p-6 bg-white rounded-xl shadow">
+          <h2 class="text-xl font-semibold mb-4">Timeline</h2>
+          <div *ngFor="let item of timeline" class="relative border-l border-gray-300 pl-6 space-y-6">
+            <div class="flex flex-row gap-4 items-center">
+              <div class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white"></div>
+              <div>
+                <p class="text-sm text-orange-600 underline capitalize">{{item.action}}</p>
+                <p class="text-sm text-green-600"><span>{{item.from}}</span> <span class="text-sm text-red-500"> to
+                  </span> <span>{{item.to}}</span></p>
+                <p class="text-xs text-black mt-1">{{item.createdAt}} :- <strong>{{item.name}}</strong></p>
+                <p class="bottom-b-2 border-black"></p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-700">Include question context</span>
+        <input type="checkbox" class="h-4 w-4 rounded border-gray-300" />
+      </div>
+    </div> -->
+
+        <!-- footer -->
+
+      </div>
+    </div>
