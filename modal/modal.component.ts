@@ -14,7 +14,7 @@ export class ModalComponent implements OnInit {
   authData: any;
   editForm: FormGroup;
   list: any[] = [];
-  status: any = [{ name: 'New', value: 'new' }, { name: "Interested", value: "interested" }, { name: 'Not Interested', value: 'not_interested' }, { name: 'Site Visit', value: 'site_visit' }, { name: "Closed", value: "closed" }];
+  status: any = [{ name: 'New', value: 'new' }, { name: 'Not Interested', value: 'not_interested' }, { name: 'Site Visit', value: 'site_visit' }, { name: "Closed", value: "closed" }];
   constructor(private _api: ApiService, private _fb: FormBuilder, private _cdr: ChangeDetectorRef) {
     const data = localStorage.getItem('authData');
     if (data) this.authData = JSON.parse(data);
