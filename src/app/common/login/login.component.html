@@ -1,0 +1,77 @@
+<div class="min-h-screen flex flex-col bg-gray-100 relative">
+  <!-- Background Image -->
+  <div class="absolute inset-0">
+    <img src="assets/images/background.jpg" alt="Real Estate Background"
+      class="w-full h-full object-cover brightness-75">
+    <div class="absolute inset-0 bg-black/25"></div> <!-- subtle overlay -->
+  </div>
+
+  <!-- Header -->
+  <!-- <header class="bg-gray-800/70 shadow-md relative z-10">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center">
+      <img src="assets/images/logo.png" alt="Logo" class="h-14 w-auto bg-white" />
+    </div>
+  </header> -->
+  <app-navbar [show]="false"></app-navbar>
+
+  <!-- Centered Form -->
+  <div class="flex flex-1 items-center justify-center px-4 py-6 relative z-10">
+    <div class="max-w-md w-full space-y-6">
+      <!-- Welcome -->
+      <div class="text-center text-white">
+        <h2 class="text-2xl font-bold mb-2">Welcome back</h2>
+        <p class="text-gray-200">Sign in to your <strong>True Property Consulting</strong> account</p>
+      </div>
+
+      <!-- Form Card -->
+      <div class="bg-transparent backdrop-blur-md rounded-lg border border-gray-300 p-8 shadow-lg">
+        <form [formGroup]="loginForm" class="space-y-4">
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-gray-700 font-medium mb-1">Email <span
+                class="text-red-500">*</span></label>
+            <input type="email" id="email" formControlName="email"
+              class="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              placeholder="Enter your email" />
+          </div>
+
+          <!-- Password -->
+          <div class="relative">
+            <label for="password" class="block text-gray-700 font-medium mb-1">Password <span
+                class="text-red-500">*</span></label>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+              class="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              placeholder="Enter your password" />
+            <button type="button" (click)="showPassword = !showPassword"
+              class="absolute inset-y-0 right-0 top-[1.3rem] px-3 flex items-center text-gray-500 hover:text-gray-700">
+              {{ showPassword ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="text-right">
+            <button type="button" routerLink="/reset-password" class="text-gray-700 text-sm hover:underline">Forgot your
+              password?</button>
+          </div>
+
+          <!-- Submit Button -->
+          <button [disabled]="loginForm.invalid" type="submit" (click)="submit()"
+            class="w-full bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900 transition">
+            Sign in
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact / Demo Info -->
+      <div class="text-center text-gray-100 text-sm">
+        <p>Don't have an account? <button routerLink="/contact-admin" class="hover:underline text-white">Contact
+            administrator</button></p>
+        <p class="text-xs mt-2">By signing in, you agree to our
+          <button class="hover:underline text-white">Terms and Conditions</button>
+          and
+          <button class="hover:underline text-white">Privacy Policy</button>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
