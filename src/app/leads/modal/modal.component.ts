@@ -53,6 +53,7 @@ export class ModalComponent implements OnInit {
       name: this._fb.control('', Validators.required),
       budget: this._fb.control('', Validators.required),
       followUp: this._fb.control('', Validators.required),
+      time:this._fb.control('',Validators.required),
       notes: this._fb.control('', Validators.required),
       status: this._fb.control('', Validators.required),
       assignedTo: ['']

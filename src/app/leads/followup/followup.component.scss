@@ -1,0 +1,21 @@
+.card {
+  transition: transform .4s ease-out, opacity .4s;
+}
+
+.swipe-right {
+  transform: translateX(120%);
+  opacity: 0;
+}
+.swipe-left {
+  transform: translateX(-120%);
+  opacity: 0;
+}
+
+.animate-pop {
+  animation: pop 0.25s ease-out;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.9) translateX(-50%); opacity: 0; }
+  100% { transform: scale(1) translateX(-50%); opacity: 1; }
+}

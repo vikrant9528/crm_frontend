@@ -37,7 +37,8 @@ export class LeadAddComponent implements OnInit {
             currency: [''],
             notes: [''],
             assignedTo: [''],
-            followUp: ['', Validators.required]
+            followUp: ['', Validators.required],
+            time:['',Validators.required]
         });
 
         // if employee, auto assign to themselves and hide assign control
@@ -46,11 +47,11 @@ export class LeadAddComponent implements OnInit {
         }
     }
     submit() {
+        console.log(this.leadForm.value);
         if (this.leadForm.invalid) { this.leadForm.markAllAsTouched(); return; }
         const payload = this.leadForm.value;
         payload.budget = payload.budget + payload.currency;
         delete payload.currency;
-        console.log(payload);
         this._api.postLead(payload).subscribe(res => {
             console.log(res);
         });

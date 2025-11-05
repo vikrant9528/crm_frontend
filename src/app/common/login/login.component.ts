@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         if (res && !res.error) {
           localStorage.setItem('authData', JSON.stringify(res.details))
           localStorage.setItem('token', res.token);
-          this.router.navigate(['/leads']);
+          this.router.navigate(['/followups']);
           this.loginForm.reset();
         } else {
           alert(`login failed${res.message}`)

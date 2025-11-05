@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-followup',
   templateUrl: './followup.component.html',
@@ -9,8 +10,12 @@ export class FollowupComponent implements OnInit {
 
   authData: any;
   followups: any = [];
+  swipedItem: any = null;
+  lastAction: { item: any, oldStatus: string } | null = null;
+  showUndo = false;
+  swipeDirection: 'left' | 'right' | null = null;
 
-  constructor(private _api: ApiService) { }
+  constructor(private _api: ApiService , private router:Router) { }
 
   ngOnInit(): void {
     const auth = localStorage.getItem('authData');
@@ -44,30 +49,71 @@ export class FollowupComponent implements OnInit {
 
   activeTab = 'today';
 
-  // followups: any = {
-  //   today: [
-  //     { leadName: 'Aryan', phone: '+919876543210', date: '2025-11-04', time: '03:30 PM', type: 'Call', status: 'Hot', note: 'Send pricing asap' },
-  //     { leadName: 'Neha', phone: '+919876543210', date: '2025-11-04', time: '11:00 AM', type: 'Meeting', status: 'Warm', note: 'Demo follow-up' }
-  //   ],
-  //   tomorrow: [
-  //     { leadName: 'Vikram', phone: '+919876543210', date: '2025-11-05', time: '10:00 AM', type: 'Email', status: 'Cold', note: 'Send brochure' }
-  //   ],
-  //   dayAfter: [
-  //     { leadName: 'Rahul', phone: '+919876543210', date: '2025-11-06', time: '04:00 PM', type: 'Call', status: 'Hot', note: 'Close the deal' }
-  //   ]
-  // };
-
   getList() {
     return this.followups[this.activeTab];
   }
 
-  call(phone: string) {
-    window.location.href = `tel:${phone}`;
+  call(item:any) {
+    item.call_track = item.call_track + 1;
+    this._api.putApi('/leads/empTrack/'+item._id,{call_track:item.call_track}).subscribe((res:any)=>{
+      console.log(res);
+      if(res && !res.error){
+        window.location.href = `tel:${item.phone}`
+      }
+    })
   }
 
-  openWhatsApp(phone: string) {
-    const message = encodeURIComponent('Thanks for reaching True Property Consulting. make you dream homes comes true')
-    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+  openWhatsApp(item:any) {
+    console.log(item);
+    
+      item.whatsapp_track = item.whatsapp_track + 1;
+      this._api.putApi('/leads/empTrack/'+item._id,{whatsapp_track:item.whatsapp_track}).subscribe((res:any)=>{
+      console.log(res);
+      if(res && !res.error){        
+        const message = encodeURIComponent('Thanks for reaching True Property Consulting. make you dream homes comes true')
+        window.open(`https://wa.me/${item.phone}?text=${message}`, '_blank');
+      }
+    })
   }
+markComplete(item: any) {
+  this.lastAction = { item, oldStatus: item.status };
+  item.status = "completed";
+  this.swipedItem = item.name;
+  this.swipeDirection = 'right';
+  if (navigator.vibrate) navigator.vibrate(30);
+
+  setTimeout(() => {
+    this.showUndo = true;
+      this.swipeDirection = null;
+  }, 100);
+  
+  setTimeout(() => {
+    this.swipedItem = null;
+  }, 400);
+}
+
+undo() {
+  if (!this.lastAction) return;
+  this.lastAction.item.status = this.lastAction.oldStatus;
+  this.lastAction = null;
+  this.showUndo = false;
+}
+
+openDetails(item: any) {
+  if (navigator.vibrate) navigator.vibrate([15, 30]);
+  this.lastAction = { item, oldStatus: item.status };
+   this.swipeDirection = 'left';
+    //  item.status = "completed";
+  this.swipedItem = item.name;
+     setTimeout(() => {
+      this.swipeDirection = null;
+    this.showUndo = true;
+  }, 100);
+  
+  setTimeout(() => {
+    this.swipedItem = null;
+  }, 400);
+  this.router.navigate(["/leads"]);
+}
 
 }
