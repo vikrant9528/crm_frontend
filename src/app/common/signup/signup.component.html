@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col bg-gray-100 relative">
+<div *ngIf="!loader" class="min-h-screen flex flex-col bg-gray-100 relative">
   <!-- Background Image -->
   <div class="absolute inset-0">
     <img src="assets/images/background.jpg" alt="Background" class="w-full h-full object-cover brightness-75">
@@ -85,7 +85,7 @@
       <div class="text-center text-gray-100 text-sm">
         <p>Already have an account? <button routerLink="/login" class="hover:underline text-white">Sign in</button></p>
         <p class="text-xs mt-2">By signing up, you agree to our
-          <button routerLink="/terms-and-condition" class="hover:underline text-white">Terms and Conditions</button>
+          <button  class="hover:underline text-white">Terms and Conditions</button>
           and
           <button class="hover:underline text-white">Privacy Policy</button>
         </p>
@@ -93,3 +93,4 @@
     </div>
   </div>
 </div>
+<app-loader *ngIf="loader" [loader]="loader"></app-loader>

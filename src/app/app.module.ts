@@ -17,12 +17,15 @@ import { IndianNumberPipe } from './leads/indian-number.pipe';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FollowupComponent } from './leads/followup/followup.component';
 import { MyHammerConfig } from './hammer.config';
+import { LoaderComponent } from './leads/loader/loader.component';
+import { SnackComponent } from './leads/snack.component';
+import { CdkVirtualScrollableElement } from "@angular/cdk/scrolling";
 
 
 
 @NgModule({
-declarations: [AppComponent, LeadAddComponent, LeadListComponent, UserAddComponent, SignupComponent, LoginComponent, LeadPipelineComponent, ModalComponent, IndianNumberPipe, NavbarComponent, FollowupComponent],
-imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule , HttpClientModule ,   DragDropModule , HammerModule],
+declarations: [AppComponent, LeadAddComponent, LeadListComponent, UserAddComponent, SignupComponent, LoginComponent, LeadPipelineComponent, ModalComponent, IndianNumberPipe, NavbarComponent, FollowupComponent, LoaderComponent , SnackComponent],
+imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, DragDropModule, HammerModule, CdkVirtualScrollableElement],
 providers: [
      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
       {

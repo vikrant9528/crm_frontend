@@ -14,6 +14,7 @@ export class FollowupComponent implements OnInit {
   lastAction: { item: any, oldStatus: string } | null = null;
   showUndo = false;
   swipeDirection: 'left' | 'right' | null = null;
+  loader:boolean = false;
 
   constructor(private _api: ApiService , private router:Router) { }
 
@@ -27,9 +28,12 @@ export class FollowupComponent implements OnInit {
   }
 
   getFollowups(id: string) {
+    this.loader = true;
     this._api.getApi('/followups/' + id).subscribe((res: any) => {
+      this.loader = false;
       console.log(res);
       if (res && !res.error) {
+        this._api.show('success',res.message)
         // this.followups = res.followups
          this.followups = {
           today : res.followups.today,
@@ -37,6 +41,8 @@ export class FollowupComponent implements OnInit {
           dayAfter : res.followups.dayAfterTomorrow
          };
          console.log(this.followups);
+      }else{
+        this._api.show('error',res.message)
       }
     });
   }
@@ -63,21 +69,38 @@ export class FollowupComponent implements OnInit {
     })
   }
 
-  openWhatsApp(item:any) {
-    console.log(item);
-    
-      item.whatsapp_track = item.whatsapp_track + 1;
-      this._api.putApi('/leads/empTrack/'+item._id,{whatsapp_track:item.whatsapp_track}).subscribe((res:any)=>{
-      console.log(res);
-      if(res && !res.error){        
-        const message = encodeURIComponent('Thanks for reaching True Property Consulting. make you dream homes comes true')
-        window.open(`https://wa.me/${item.phone}?text=${message}`, '_blank');
-      }
-    })
-  }
+openWhatsApp(item: any) {
+  console.log(item);
+  item.whatsapp_track = (item.whatsapp_track || 0) + 1;
+  const phone = item.phone;
+  const message = encodeURIComponent(
+    'Thanks for reaching True Property Consulting. make your dream homes come true'
+  );
+  const appUrl = `whatsapp://send?phone=${phone}&text=${message}`;
+  const webUrl = `https://wa.me/${phone}?text=${message}`;
+  this._api.putApi(
+    `/leads/empTrack/${item._id}`,
+    { whatsapp_track: item.whatsapp_track }
+  ).subscribe((res: any) => {
+    console.log(res);
+    if (res && !res.error) {
+      window.location.href = appUrl;
+      setTimeout(() => {
+        window.location.href = webUrl;
+      }, 700);
+    }
+  }, (err) => {
+    console.error(err);
+    window.location.href = appUrl;
+    setTimeout(() => {
+      window.location.href = webUrl;
+    }, 700);
+  });
+}
+
 markComplete(item: any) {
   this.lastAction = { item, oldStatus: item.status };
-  item.status = "completed";
+  // item.status = "completed";
   this.swipedItem = item.name;
   this.swipeDirection = 'right';
   if (navigator.vibrate) navigator.vibrate(30);

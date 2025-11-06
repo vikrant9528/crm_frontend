@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'leads/add', component: LeadAddComponent },
   { path: 'leads', component: LeadListComponent },
-  { path: 'followups', component: FollowupComponent }
+  { path: 'followups', component: FollowupComponent },
+  {path:'**',component:LoginComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

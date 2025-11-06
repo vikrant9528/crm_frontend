@@ -10,9 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  error: any;
-  success: any;
   showPassword: boolean = false;
+  loader:boolean = false;
   constructor(private _api: ApiService, private _fb: FormBuilder, private router: Router) {
 
   }
@@ -30,16 +29,21 @@ export class LoginComponent implements OnInit {
 
   submit() {
     if (this.loginForm.valid) {
+      this.loader = true;
       this._api.login(this.loginForm.value).subscribe((res: any) => {
+        this.loader = false;
         if (res && !res.error) {
           localStorage.setItem('authData', JSON.stringify(res.details))
           localStorage.setItem('token', res.token);
+          this._api.show('success',res.message)
           this.router.navigate(['/followups']);
           this.loginForm.reset();
         } else {
           alert(`login failed${res.message}`)
         }
       })
+    }else{
+      this._api.show('error','please fill all the details');
     }
   }
 

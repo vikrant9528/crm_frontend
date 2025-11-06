@@ -1,4 +1,4 @@
-<div *ngIf="open" class="fixed inset-0 flex items-center justify-center z-50">
+<div *ngIf="open && !loader" class="fixed inset-0 flex items-center justify-center z-50">
   <!-- backdrop -->
   <div class="fixed inset-0 bg-gray-500/75 transition-opacity" (click)="close()"></div>
 
@@ -120,3 +120,4 @@
 
       </div>
     </div>
+    <app-loader *ngIf="loader" [loader]="loader"></app-loader>

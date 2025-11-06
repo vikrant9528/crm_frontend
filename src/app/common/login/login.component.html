@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col bg-gray-100 relative">
+<div *ngIf="!loader" class="min-h-screen flex flex-col bg-gray-100 relative">
   <!-- Background Image -->
   <div class="absolute inset-0">
     <img src="assets/images/background.jpg" alt="Real Estate Background"
@@ -64,7 +64,7 @@
 
       <!-- Contact / Demo Info -->
       <div class="text-center text-gray-100 text-sm">
-        <p>Don't have an account? <button routerLink="/contact-admin" class="hover:underline text-white">Contact
+        <p>Don't have an account? <button routerLink="/" class="hover:underline text-white">Contact
             administrator</button></p>
         <p class="text-xs mt-2">By signing in, you agree to our
           <button class="hover:underline text-white">Terms and Conditions</button>
@@ -75,3 +75,4 @@
     </div>
   </div>
 </div>
+<app-loader *ngIf="loader" [loader]="loader"></app-loader>

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-import { tap } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 import { environment } from '../../environments/environment'
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,13 @@ export class ApiService implements OnInit {
   // private url = 'http://192.168.1.161:3000';
 
   constructor(private http: HttpClient) { }
+
+  private _toast = new Subject<{ type: 'success' | 'error', msg: string }>();
+  toast$ = this._toast.asObservable();
+
+  show(type: 'success' | 'error', msg: string) {
+    this._toast.next({ type, msg });
+  }
 
   ngOnInit(): void {
 
@@ -43,5 +50,8 @@ export class ApiService implements OnInit {
   }
   getApi(param: string) {
     return this.http.get(environment.apiUrl + param)
+  }
+  deleteApi(endpoint:string){
+    return this.http.delete(environment.apiUrl + endpoint);
   }
 }

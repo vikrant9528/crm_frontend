@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
 })
 export class SignupComponent {
   signupForm: FormGroup;
-  error = '';
-  success = '';
+  loader:boolean = false;
 
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {
     this.signupForm = this.fb.group({
@@ -26,10 +25,20 @@ export class SignupComponent {
   }
 
   submit() {
-    if (this.signupForm.invalid) return;
+    if (this.signupForm.invalid){
+      this.api.show('error','please fill the form details');
+      return;
+    }
+    this.loader = true;
     this.api.signup(this.signupForm.value).subscribe((res: any) => {
-      console.log(res);
-      this.router.navigate(['/login'])
+      this.loader = false;
+      if(res && !res.error){
+        console.log(res);
+        this.api.show('success',res.message)
+        this.router.navigate(['/login'])
+      }else{
+        this.api.show('error',res.message)
+      }
     })
   }
 }

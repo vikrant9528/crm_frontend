@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-col bg-gray-100 relative overflow-hidden">
+<div *ngIf="!loader" class="min-h-screen flex flex-col bg-gray-100 relative overflow-hidden">
     <!-- Animated Gradient Background -->
     <div class="absolute inset-0">
         <div
@@ -114,3 +114,4 @@
         </div>
     </div>
 </div>
+<app-loader *ngIf="loader" [loader]="loader"></app-loader>

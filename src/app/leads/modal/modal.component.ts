@@ -11,6 +11,7 @@ export class ModalComponent implements OnInit {
   @Input() leads: any;
   @Output() closed = new EventEmitter<boolean>();
   @Input() timeline: any;
+  loader:boolean = false;
   authData: any;
   editForm: FormGroup;
   list: any[] = [];
@@ -19,16 +20,20 @@ export class ModalComponent implements OnInit {
     const data = localStorage.getItem('authData');
     if (data) this.authData = JSON.parse(data);
     this.createForm();
-    this._api.getAllUsers(this.authData._id).subscribe((res: any) => {
-      if (res) {
+    this.getAllUsers(this.authData._id);
+  }
+
+  getAllUsers(id:string){
+    this.loader = true;
+      this._api.getAllUsers(id).subscribe((res: any) => {
+        this.loader = false;
+      if (res && !res.error) {
+        this._api.show('success',res.message)
         this.list = res;
       } else {
+        this._api.show('error',res.message)
         this.list = [];
       }
-      console.log(this.list);
-      console.log(this.leads);
-      console.log(this.timeline);
-
     })
   }
 
@@ -71,9 +76,14 @@ export class ModalComponent implements OnInit {
   }
 
   editLeadDetails(url, data) {
+    this.loader = true;
     this._api.putApi(url, data).subscribe((res: any) => {
+      this.loader = false;
       if (res && !res.error) {
+        this._api.show('success',res.message)
         this.closed.emit(true);
+      }else{
+        this._api.show('error',res.message);
       }
     })
   }

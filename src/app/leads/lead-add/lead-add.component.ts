@@ -14,14 +14,23 @@ export class LeadAddComponent implements OnInit {
     list: any;
     role: any;
     currency: any[] = [{ name: 'Lakh', value: 'lakh' }, { name: "cr", value: 'cr' }]
+    loader:boolean = false;
     constructor(private fb: FormBuilder, private leadSvc: LeadService, private auth: AuthService, private router: Router, private _api: ApiService) {
         const data = localStorage.getItem('authData');
         if (data) this.role = JSON.parse(data);
-        this._api.getAllUsers(this.role._id).subscribe((res) => {
+        this.getAllUsers(this.role._id);
+    }
+
+    getAllUsers(id:string){
+          this.loader = true;
+            this._api.getAllUsers(id).subscribe((res:any) => {
             console.log(res);
-            if (res) {
+            this.loader = false;
+            if (res && !res.error) {
+                this._api.show('success', res.message);
                 this.list = res;
             } else {
+                this._api.show('error', res.message);
                 this.list = [];
             }
             console.log(this.list);
@@ -52,12 +61,14 @@ export class LeadAddComponent implements OnInit {
         const payload = this.leadForm.value;
         payload.budget = payload.budget + payload.currency;
         delete payload.currency;
-        this._api.postLead(payload).subscribe(res => {
-            console.log(res);
+        this._api.postLead(payload).subscribe((res:any) => {
+            if(res && !res.error){
+                this._api.show('success',res.message);
+                this.router.navigate(['/leads'])
+            }else{
+                this._api.show('error',res.message);
+            }
         });
-        // this.leadSvc.add(payload);
-        // this.router.navigate(['/leads'])
         this.leadForm.reset({ source: 'website' });
-        alert('Lead added');
     }
 }
