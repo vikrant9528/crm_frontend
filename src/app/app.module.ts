@@ -20,12 +20,13 @@ import { MyHammerConfig } from './hammer.config';
 import { LoaderComponent } from './leads/loader/loader.component';
 import { SnackComponent } from './leads/snack.component';
 import { CdkVirtualScrollableElement } from "@angular/cdk/scrolling";
+import { WebcamModule } from 'ngx-webcam';
 
 
 
 @NgModule({
 declarations: [AppComponent, LeadAddComponent, LeadListComponent, UserAddComponent, SignupComponent, LoginComponent, LeadPipelineComponent, ModalComponent, IndianNumberPipe, NavbarComponent, FollowupComponent, LoaderComponent , SnackComponent],
-imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, DragDropModule, HammerModule, CdkVirtualScrollableElement],
+imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, DragDropModule, HammerModule, CdkVirtualScrollableElement , WebcamModule],
 providers: [
      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
       {

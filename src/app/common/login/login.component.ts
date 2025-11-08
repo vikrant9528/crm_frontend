@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/followups']);
           this.loginForm.reset();
         } else {
-          alert(`login failed${res.message}`)
+          this._api.show('error',res.message);
         }
       })
     }else{

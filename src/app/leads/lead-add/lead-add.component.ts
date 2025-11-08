@@ -28,7 +28,7 @@ export class LeadAddComponent implements OnInit {
             this.loader = false;
             if (res && !res.error) {
                 this._api.show('success', res.message);
-                this.list = res;
+                this.list = res.users;
             } else {
                 this._api.show('error', res.message);
                 this.list = [];
@@ -37,6 +37,9 @@ export class LeadAddComponent implements OnInit {
         })
     }
     ngOnInit() {
+        this.createForm();
+    }
+    createForm(){
         this.leadForm = this.fb.group({
             name: ['', Validators.required],
             phone: ['', Validators.required],
@@ -46,8 +49,8 @@ export class LeadAddComponent implements OnInit {
             currency: [''],
             notes: [''],
             assignedTo: [''],
-            followUp: ['', Validators.required],
-            time:['',Validators.required]
+            followUp: ['', this.role.role != 'admin' ? Validators.required : ''],
+            time:['',this.role.role != 'admin' ? Validators.required : '']
         });
 
         // if employee, auto assign to themselves and hide assign control
@@ -55,9 +58,10 @@ export class LeadAddComponent implements OnInit {
             this.leadForm.get('assignedTo')?.setValue(this.user.id);
         }
     }
+
     submit() {
         console.log(this.leadForm.value);
-        if (this.leadForm.invalid) { this.leadForm.markAllAsTouched(); return; }
+        if (this.leadForm.invalid) { this.leadForm.markAllAsTouched(); this._api.show('error','please fill all details'); return; }
         const payload = this.leadForm.value;
         payload.budget = payload.budget + payload.currency;
         delete payload.currency;

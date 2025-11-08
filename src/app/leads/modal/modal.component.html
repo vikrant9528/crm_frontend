@@ -20,7 +20,7 @@
     </div>
 
     <!-- form content -->
-    <div class="space-y-6" [formGroup]="editForm">
+    <div *ngIf="!showCamera && !previewImage" class="space-y-6" [formGroup]="editForm">
       <div class="grid grid-cols-2 gap-4">
         <label class="block text-sm text-gray-700">
           Email
@@ -120,4 +120,44 @@
 
       </div>
     </div>
+<!-- CAMERA VIEW -->
+<div *ngIf="showCamera" class="space-y-4">
+  <webcam 
+    [trigger]="triggerObservable"
+    (imageCapture)="handleImage($event)"
+    class="rounded-lg shadow-md"
+  ></webcam>
+
+  <button 
+    (click)="triggerSnapshot()" 
+    class="bg-blue-600 text-white px-4 py-2 rounded-md"
+  >
+    📸 Capture
+  </button>
+</div>
+
+<!-- PREVIEW VIEW -->
+<div *ngIf="previewImage" class="space-y-4 text-center">
+  <img 
+    [src]="previewImage" 
+    class="w-60 h-60 object-cover rounded-lg mx-auto shadow-md"
+  />
+
+  <div class="flex justify-center gap-4">
+    <button 
+      (click)="retakePhoto()" 
+      class="bg-gray-300 px-4 py-2 rounded-md"
+    >
+      🔄 Retake
+    </button>
+
+    <button 
+      (click)="confirmUpload()"
+      class="bg-green-600 text-white px-4 py-2 rounded-md"
+    >
+      ✅ Confirm
+    </button>
+  </div>
+</div>
+
     <app-loader *ngIf="loader" [loader]="loader"></app-loader>

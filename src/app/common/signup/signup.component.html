@@ -25,6 +25,24 @@
       <!-- Form Card -->
       <div class="bg-transparent backdrop-blur-md rounded-lg border border-gray-300 p-8 shadow-lg">
         <form [formGroup]="signupForm" (ngSubmit)="submit()" class="space-y-4">
+
+              <div>
+            <label class="block text-gray-700 font-medium mb-1">Profile</label>
+            <input (change)="handleInputChange($event)" #userprofile type="file" accept=".jpg, .jpeg, .png"
+              class="hidden w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500"
+               />
+             <div class="flex gap-4 items-center">
+            <button (click)="userprofile.click()" type="button" class="w-fit px-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900 transition">
+                   Upload File
+          </button>
+          <p class="bg-white px-2 rounded-md" *ngIf="!userProfile">No profile selected</p>
+          <p class="bg-white flex flex-col justify-center gap-1 px-1 py-1 items-center rounded-md" *ngIf="userProfile"> 
+            preview
+            <img class="h-[70px] w-[70px] object-cover" [src]="userProfile" alt="profile_icon">
+          </p>
+             </div>
+          </div>
+
           <!-- Name -->
           <div>
             <label class="block text-gray-700 font-medium mb-1">Name</label>

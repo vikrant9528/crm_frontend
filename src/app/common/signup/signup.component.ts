@@ -12,10 +12,14 @@ import { Router } from '@angular/router';
 export class SignupComponent {
   signupForm: FormGroup;
   loader:boolean = false;
+  userProfile:any = '';
 
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {
+    localStorage.removeItem('authData');
+    localStorage.removeItem('token')
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
+      file:['',Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.compose([Validators.required, Validators.minLength(10), Validators.maxLength(10)])],
       password: ['', Validators.required],
@@ -24,13 +28,31 @@ export class SignupComponent {
     });
   }
 
+    handleInputChange(e: any) {
+    let file = e.target.files[0];
+    if (file) {
+      this.signupForm.get('file').setValue(file);
+      const url = (URL.createObjectURL(file));
+      console.log(url);
+      if (url) {
+        this.userProfile = url
+      }
+    }
+  }
+
   submit() {
     if (this.signupForm.invalid){
       this.api.show('error','please fill the form details');
       return;
     }
+    const params = this.signupForm.value;
+    const formData = new FormData();
+    const keys = Object.keys(params);
+    for(let key of keys){
+      formData.append(key,params[key]) 
+    }
     this.loader = true;
-    this.api.signup(this.signupForm.value).subscribe((res: any) => {
+    this.api.signup(formData).subscribe((res: any) => {
       this.loader = false;
       if(res && !res.error){
         console.log(res);

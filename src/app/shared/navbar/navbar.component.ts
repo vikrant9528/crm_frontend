@@ -19,7 +19,8 @@ export class NavbarComponent {
   @Input() show: boolean = false;
   fix: boolean = false;
   menuOpen: boolean = false;
-  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' }];
+  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' } , { name:'Logout' , link:'/'}];
+  authData:any;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -27,6 +28,10 @@ export class NavbarComponent {
   }
 
   constructor() {
+    const authData = localStorage.getItem('authData');
+    if(authData){
+      this.authData = JSON.parse(authData);
+    }
     console.log(this.show);
   }
 }
