@@ -15,6 +15,7 @@ export class FollowupComponent implements OnInit {
   showUndo = false;
   swipeDirection: 'left' | 'right' | null = null;
   loader:boolean = false;
+  showFull: Record<string, boolean> = {};
 
   constructor(private _api: ApiService , private router:Router) { }
 
@@ -26,6 +27,9 @@ export class FollowupComponent implements OnInit {
       this.getFollowups(this.authData._id);
     }
   }
+    toggleShow(id: string) {
+  this.showFull[id] = !this.showFull[id];
+}
 
   getFollowups(id: string) {
     this.loader = true;

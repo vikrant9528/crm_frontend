@@ -1,5 +1,5 @@
 <app-navbar [show]="true"></app-navbar>
-<div *ngIf="!loader" class="p-5 font-medium space-y-4">
+<div *ngIf="!loader" class="p-5 font-medium space-y-4 overflow-y-auto h-screen">
 
   <h2 class="text-xl font-bold">Follow-ups</h2>
   <!-- <input type="text" placeholder="Search leads… 🔍" class="w-full p-3 rounded-xl bg-gray-100 outline-none text-sm" /> -->
@@ -36,9 +36,21 @@
       🕒 {{ item.time }}  <span *ngIf="authData.role == 'admin'" class="text-sm text-black">Employee | {{item.assignedTo.name}}</span>
     </div>
 
-    <div class="text-xs text-gray-500">
+    <!-- <div class="text-xs text-gray-500">
       📝 {{ item.notes }}
-    </div>
+    </div> -->
+  <div class="text-xs text-gray-500">
+  📝
+  <span>
+    {{ showFull[item._id] ? item.notes : (item.notes | slice:0:40) + '...' }}
+  </span>
+
+  <button *ngIf="item.notes.length > 40"
+          (click)="toggleShow(item._id)"
+          class="text-blue-600 ml-1">
+    {{ showFull[item._id] ? 'Show less' : 'Show more' }}
+  </button>
+</div>
 
     <div class="pt-2 flex gap-3">
       <div class="relative inline-block">
