@@ -17,6 +17,10 @@ export class LeadListComponent implements OnInit {
   timeline: any;
   loader: boolean = false;
   searchText = '';
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalLeads = 0;
+  allPages = 0;
 
   constructor(private leadSvc: LeadService, private auth: AuthService, private api: ApiService) {
     const data = localStorage.getItem('authData');
@@ -26,7 +30,7 @@ export class LeadListComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getleads('/leads');
+    this.getleads(`/leads?page=${this.currentPage}&limit=${this.itemsPerPage}`);
   }
 
   getleads(params) {
@@ -35,10 +39,12 @@ export class LeadListComponent implements OnInit {
       this.loader = false;
       if (res && !res.error) {
         this.api.show('success', res.message)
-        this.user = res.leads;
-        this.leads = this.visibleLeads(this.role);
+        // this.user = res.leads;
         console.log(this.leads);
         this.timeline = res.timeline;
+        this.leads = res.leads;
+    this.totalLeads = res.pagination.totalLeads;
+    this.allPages = res.pagination.totalPages;
       } else {
         this.api.show('error', res.message);
       }
@@ -55,11 +61,13 @@ export class LeadListComponent implements OnInit {
     );
   }
 
+  
 
-  visibleLeads(data) {
-    if (data.role === 'admin') return this.user;
-    return this.user.filter(l => l.assignedTo._id === data._id);
-  }
+
+  // visibleLeads(data) {
+  //   // if (data.role === 'admin') return this.user;
+  //   // return this.user.filter(l => l.assignedTo._id === data._id);
+  // }
   handleOpen(val: any) {
     this.editleads = val;
     this.showModal = true
@@ -84,6 +92,25 @@ export class LeadListComponent implements OnInit {
       console.log('Confirmed action');
     }
   }
+
+  get totalPages() {
+  return Math.ceil(this.totalLeads / this.itemsPerPage);
+}
+
+goToNextPage() {
+  if (this.currentPage < this.totalPages) this.changePage(this.currentPage + 1);
+}
+
+goToPrevPage() {
+  if (this.currentPage > 1) this.changePage(this.currentPage - 1);
+}
+
+changePage(page: number) {
+  if (page >= 1 && page <= this.totalPages) {
+    this.currentPage = page;
+    this.getleads(`/leads?page=${page}&limit=${this.itemsPerPage}`);
+  }
+}
   exportToExcel(): void {
     const formattedLeads = this.leads.map((lead: any) => ({
       Name: lead.name,

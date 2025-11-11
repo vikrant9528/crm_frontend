@@ -7,7 +7,7 @@ import { ApiService } from "../services/api.service";
   template: `
     <div
       *ngIf="toast"
-      class="fixed z-[9999999] top-4 right-4 px-4 py-3 rounded-lg text-white font-medium 
+      class="fixed z-[9999999] bottom-4 right-4 px-4 py-3 rounded-lg text-white font-medium 
       transition-opacity duration-300 shadow-lg"
       [ngClass]="{
         'bg-green-600': toast.type === 'success',

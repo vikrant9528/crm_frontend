@@ -17,7 +17,7 @@
           <p class="text-sm">{{authData.name}}</p>
           <img class="object-contain w-[70px] h-[70px]" [src]="authData.profileImage" alt="profile_image">
         </div> -->
-        <a *ngFor="let item of listItem;let i = index" [routerLink]="item.link"
+        <a *ngFor="let item of listItem;let i = index" [routerLink]="item.link" (click)="logout(item)"
           class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-black transition">{{ item.name }}</a>
       </div>
     </div>

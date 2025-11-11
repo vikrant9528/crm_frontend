@@ -1,10 +1,10 @@
-<div *ngIf="!loader" class="min-h-screen flex flex-col bg-gray-100 relative overflow-hidden">
+<div *ngIf="!loader" class="min-h-screen flex flex-col bg-gray-100 relative">
   <!-- Animated Gradient Background -->
   <div class="absolute inset-0">
     <div
       class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 opacity-30 animate-gradient-x">
     </div>
-    <img src="assets/images/home.webp" alt="Background" class="w-full h-full object-cover brightness-75">
+    <img src="assets/images/bg2.jpg" alt="Background" class="w-full h-full object-cover brightness-75">
     <div class="absolute inset-0 bg-black/25"></div>
   </div>
 
@@ -18,11 +18,12 @@
     </div>
   </header> -->
 
-  <app-navbar [show]="true"></app-navbar>
+  <app-navbar class="sticky top-0 z-[9999]"  [show]="true"></app-navbar>
+
 
   <!-- Leads Section -->
   <div class="flex flex-1 items-start justify-center px-4 py-6 relative z-10">
-    <div class="max-w-4xl w-full bg-transparent backdrop-blur-md rounded-lg shadow-lg p-6 space-y-4">
+    <div class="max-w-4xl w-full bg-transparent  rounded-lg shadow-lg p-6 space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-semibold mb-2 text-white">Leads</h2>
         <button *ngIf="role.role == 'admin'"
@@ -32,7 +33,7 @@
       </div>
 
       <div *ngIf="leads?.length === 0" class="p-4 bg-yellow-200/80 text-gray-900 rounded">
-        No leads visible.
+        No leads Available.
       </div>
       <!-- <button (click)="exportPNG()" 
         class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
@@ -43,7 +44,8 @@
       <div class="space-y-3">
         <input type="text" placeholder="Search by name.." class="p-2 rounded mb-3 w-full text-black"
           [(ngModel)]="searchText" />
-        <div *ngFor="let lead of filteredLeads"
+        @if(filteredLeads.length){
+          <div *ngFor="let lead of filteredLeads"
           class="relative p-4 bg-white/90 rounded-lg shadow flex justify-between items-center hover:shadow-md transition">
           <button *ngIf="role.role == 'admin'" (click)="deleteLead(lead)"
             class="absolute top-[-1px] right-[-3px] text-red-500 hover:text-red-700 text-lg transition"
@@ -64,12 +66,59 @@
           </div>
           <div class="text-right">
             <div class="text-sm">Budget: {{ lead.budget }}</div>
-            <div class="text-xs">Assigned: {{ lead.assignedTo.name || '-' }}</div>
+            <div class="text-xs">Assigned: {{ lead.assignedTo?.name || '-' }}</div>
             <div (click)="handleOpen(lead)" class="text-sm text-orange-500 hover:cursor-pointer hover:underline">
               Edit
             </div>
           </div>
         </div>
+        }@else{
+          <p class="text-3xl text-red-400 text-center font-semibold">No Result Match</p>
+        }
+
+
+         <div
+    class="flex flex-wrap justify-center items-center gap-2 mt-6 text-sm font-medium"
+    *ngIf="totalPages > 1"
+  >
+    <!-- Previous Button -->
+    <button
+      (click)="goToPrevPage()"
+      [disabled]="currentPage === 1"
+      class="px-3 py-1 hover:bg-gray-900 rounded disabled:opacity-50  bg-gray-800 text-white transition"
+    >
+      Prev
+    </button>
+
+    <!-- Page Numbers -->
+    <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
+      <button
+        (click)="changePage(i + 1)"
+        [class.bg-gray-800]="currentPage === i + 1"
+        [class.text-white]="currentPage === i + 1"
+        class="px-3 py-1 rounded border border-gray-300 hover:bg-blue-100 transition"
+      >
+        {{ i + 1 }}
+      </button>
+    </ng-container>
+
+    <!-- Next Button -->
+    <button
+      (click)="goToNextPage()"
+      [disabled]="currentPage === totalPages"
+      class="px-3 py-1 hover:bg-gray-900 rounded disabled:opacity-50  bg-gray-800 text-white transition"
+    >
+      Next
+    </button>
+  </div>
+
+  <!-- Page info -->
+  <div class="text-center text-white text-xs mt-2">
+    Showing page {{ currentPage }} of {{ totalPages }} ({{ totalLeads }} leads)
+  </div>
+
+
+
       </div>
     </div>
 

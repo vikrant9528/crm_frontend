@@ -1,32 +1,38 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { User } from '../models/user.model';
-
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUser$ = new BehaviorSubject<User | null>(null);
 
 
-  constructor() {
+  constructor(private router : Router) {
     // seed a demo user. Replace with real auth.
     // const demo: User = { id: 'u1', name: 'Admin User', role: 'admin' };
     // this.currentUser$.next(demo);
   }
 
-
-  // getUser(): Observable<User | null> {
-  // return this.currentUser$.asObservable();
-  // }
-
-
-  setUser(user: User | null) {
-    this.currentUser$.next(user);
+    getUser() {
+    const data = localStorage.getItem('authData');
+    if (data) return JSON.parse(data).user;
+    return null;
   }
 
-
-  isAdmin(): boolean {
-    const u = this.currentUser$.value;
-    return !!u && u.role === 'admin';
+  // 🔹 Get stored token
+  getToken() {
+    const data = localStorage.getItem('authData');
+    if (data) return JSON.parse(data).token;
+    return null;
   }
+
+  // 🔹 Check if logged in
+  isLoggedIn() {
+    return !!localStorage.getItem('authData');
+  }
+
+  // 🔹 Logout
+  logout() {
+    localStorage.removeItem('authData');
+    this.router.navigate(['/login']);
+  }
+
 }

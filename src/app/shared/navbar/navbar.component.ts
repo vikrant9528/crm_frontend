@@ -1,4 +1,5 @@
 import { Component, HostListener, Input } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 interface listItem {
   name: string,
   link: string
@@ -20,15 +21,20 @@ export class NavbarComponent {
   @Input() show: boolean = false;
   fix: boolean = false;
   menuOpen: boolean = false;
-  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' }, { name: 'Logout', link: '/' }];
+  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' }, { name: 'Logout', link: '/login' }];
   authData: any;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
 
   }
+  logout(item:any){
+    if(item.name == 'Logout'){
+      this._auth.logout();
+    }
+  }
 
-  constructor() {
+  constructor(private _auth : AuthService) {
     const authData = localStorage.getItem('authData');
     if (authData) {
       this.authData = JSON.parse(authData);

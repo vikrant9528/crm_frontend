@@ -16,8 +16,6 @@ export class SignupComponent {
   userProfile: any = '';
 
   constructor(private fb: FormBuilder, private api: ApiService, private router: Router) {
-    localStorage.removeItem('authData');
-    localStorage.removeItem('token')
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
       file: ['', Validators.required],
