@@ -36,9 +36,18 @@
       🕒 {{ item.time }}  <span *ngIf="authData.role == 'admin'" class="text-sm text-black">Employee | {{item.assignedTo.name}}</span>
     </div>
 
-    <div class="text-xs text-gray-500">
-      📝 {{ item.notes }}
-    </div>
+<div class="text-xs text-gray-500">
+  📝
+  <span>
+    {{ showFull[item._id] ? item.notes : (item.notes | slice:0:40) + '...' }}
+  </span>
+
+  <button *ngIf="item.notes.length > 40"
+          (click)="toggleShow(item._id)"
+          class="text-blue-600 ml-1">
+    {{ showFull[item._id] ? 'Show less' : 'Show more' }}
+  </button>
+</div>
 
     <div class="pt-2 flex gap-3">
       <div class="relative inline-block">
