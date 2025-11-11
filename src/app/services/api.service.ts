@@ -21,8 +21,8 @@ export class ApiService implements OnInit {
   ngOnInit(): void {
 
   }
-  postLead(data: any) {
-    return this.http.post(environment.apiUrl + '/leads', data);
+  postLead(endpoint: string, data: any) {
+    return this.http.post(environment.apiUrl + endpoint, data);
   }
   getAllLeads(payload) {
     return this.http.get(environment.apiUrl + payload)
@@ -51,7 +51,7 @@ export class ApiService implements OnInit {
   getApi(param: string) {
     return this.http.get(environment.apiUrl + param)
   }
-  deleteApi(endpoint:string){
+  deleteApi(endpoint: string) {
     return this.http.delete(environment.apiUrl + endpoint);
   }
 }

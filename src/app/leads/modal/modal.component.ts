@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 
 @Component({
+  standalone: false,
   selector: 'app-modal',
   templateUrl: './modal.component.html'
 })
@@ -13,16 +14,16 @@ export class ModalComponent implements OnInit {
   @Input() leads: any;
   @Output() closed = new EventEmitter<boolean>();
   @Input() timeline: any;
-  loader:boolean = false;
+  loader: boolean = false;
   authData: any;
   editForm: FormGroup;
   list: any[] = [];
   trigger: Subject<void> = new Subject<void>();
   previewImage: string | null = null;
-triggerObservable = this.trigger.asObservable();
+  triggerObservable = this.trigger.asObservable();
 
-showCamera = false;
-capturedImage: string | null = null;
+  showCamera = false;
+  capturedImage: string | null = null;
   status: any = [{ name: 'New', value: 'new' }, { name: 'Not Interested', value: 'not_interested' }, { name: 'Site Visit', value: 'site_visit' }, { name: "Closed", value: "closed" }];
   constructor(private _api: ApiService, private _fb: FormBuilder, private _cdr: ChangeDetectorRef) {
     const data = localStorage.getItem('authData');
@@ -31,15 +32,15 @@ capturedImage: string | null = null;
     this.getAllUsers(this.authData._id);
   }
 
-  getAllUsers(id:string){
+  getAllUsers(id: string) {
     this.loader = true;
-      this._api.getAllUsers(id).subscribe((res: any) => {
-        this.loader = false;
+    this._api.getAllUsers(id).subscribe((res: any) => {
+      this.loader = false;
       if (res && !res.error) {
-        this._api.show('success',res.message)
+        this._api.show('success', res.message)
         this.list = res.users;
       } else {
-        this._api.show('error',res.message)
+        this._api.show('error', res.message)
         this.list = [];
       }
     })
@@ -47,7 +48,7 @@ capturedImage: string | null = null;
 
   ngOnInit(): void {
     this.editForm.get('status').valueChanges.subscribe(res => {
-      if(res && res == 'site_visit'){
+      if (res && res == 'site_visit') {
         this.startCamera()
       }
     })
@@ -70,8 +71,8 @@ capturedImage: string | null = null;
       phone: this._fb.control('', Validators.required),
       name: this._fb.control('', Validators.required),
       budget: this._fb.control('', Validators.required),
-      followUp: ['',this.authData.role != 'admin' ? Validators.required : ''],
-      time:['',this.authData.role != 'admin' ? Validators.required : ''],
+      followUp: ['', this.authData.role != 'admin' ? Validators.required : ''],
+      time: ['', this.authData.role != 'admin' ? Validators.required : ''],
       notes: this._fb.control('', Validators.required),
       status: this._fb.control('', Validators.required),
       assignedTo: ['']
@@ -93,42 +94,42 @@ capturedImage: string | null = null;
     this._api.putApi(url, data).subscribe((res: any) => {
       this.loader = false;
       if (res && !res.error) {
-        this._api.show('success',res.message)
+        this._api.show('success', res.message)
         this.closed.emit(true);
-      }else{
-        this._api.show('error',res.message);
+      } else {
+        this._api.show('error', res.message);
       }
     })
   }
 
-startCamera() {
-  this.showCamera = true;
-  this.previewImage = null;
-}
+  startCamera() {
+    this.showCamera = true;
+    this.previewImage = null;
+  }
 
-triggerSnapshot() {
-  this.trigger.next();
-}
+  triggerSnapshot() {
+    this.trigger.next();
+  }
 
-handleImage(img: WebcamImage) {
-  this.previewImage = img.imageAsDataUrl;
-  this.showCamera = false;
-}
+  handleImage(img: WebcamImage) {
+    this.previewImage = img.imageAsDataUrl;
+    this.showCamera = false;
+  }
 
-retakePhoto() {
-  this.previewImage = null;
-  this.showCamera = true;
-}
+  retakePhoto() {
+    this.previewImage = null;
+    this.showCamera = true;
+  }
 
-confirmUpload() {
-  const formData = new FormData();
-  formData.append('image', this.previewImage);
-  console.log('image clicked');
-  
-  // this._api.putApi(`/leads/addVisitPhoto/${this.editleads._id}`, formData)
-  // .subscribe(res => {
-  //   console.log("Uploaded ✅", res);
-  //   this.previewImage = null;
-  // });
-}
+  confirmUpload() {
+    const formData = new FormData();
+    formData.append('image', this.previewImage);
+    console.log('image clicked');
+
+    // this._api.putApi(`/leads/addVisitPhoto/${this.editleads._id}`, formData)
+    // .subscribe(res => {
+    //   console.log("Uploaded ✅", res);
+    //   this.previewImage = null;
+    // });
+  }
 }

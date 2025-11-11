@@ -4,6 +4,7 @@ interface listItem {
   link: string
 }
 @Component({
+  standalone: false,
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -19,8 +20,8 @@ export class NavbarComponent {
   @Input() show: boolean = false;
   fix: boolean = false;
   menuOpen: boolean = false;
-  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' } , { name:'Logout' , link:'/'}];
-  authData:any;
+  listItem: listItem[] = [{ name: 'Add Lead', link: '/leads/add' }, { name: 'Lead List', link: '/leads' }, { name: 'Dashboard', link: '/leads' }, { name: 'FollowUps', link: '/followups' }, { name: 'Logout', link: '/' }];
+  authData: any;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -29,7 +30,7 @@ export class NavbarComponent {
 
   constructor() {
     const authData = localStorage.getItem('authData');
-    if(authData){
+    if (authData) {
       this.authData = JSON.parse(authData);
     }
     console.log(this.show);

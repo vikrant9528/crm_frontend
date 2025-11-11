@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 
-@Component({ selector: 'app-lead-list', templateUrl: './lead-list.component.html' })
+@Component({ standalone: false, selector: 'app-lead-list', templateUrl: './lead-list.component.html' })
 export class LeadListComponent implements OnInit {
   leads: any[] = [];
   user: any;
@@ -15,7 +15,8 @@ export class LeadListComponent implements OnInit {
   showModal = false;
   editleads: any;
   timeline: any;
-  loader:boolean = false;
+  loader: boolean = false;
+  searchText = '';
 
   constructor(private leadSvc: LeadService, private auth: AuthService, private api: ApiService) {
     const data = localStorage.getItem('authData');
@@ -33,16 +34,28 @@ export class LeadListComponent implements OnInit {
     this.api.getAllLeads(params).subscribe((res: any) => {
       this.loader = false;
       if (res && !res.error) {
-        this.api.show('success',res.message)
+        this.api.show('success', res.message)
         this.user = res.leads;
         this.leads = this.visibleLeads(this.role);
         console.log(this.leads);
         this.timeline = res.timeline;
-      }else{
-        this.api.show('error',res.message);
+      } else {
+        this.api.show('error', res.message);
       }
     })
   }
+
+
+  get filteredLeads() {
+    if (!this.searchText) return this.leads;
+    const t = this.searchText.toLowerCase();
+    return this.leads.filter(
+      l =>
+        l.name?.toLowerCase().includes(t) || l.assignedTo?.name?.toLowerCase().includes(t)
+    );
+  }
+
+
   visibleLeads(data) {
     if (data.role === 'admin') return this.user;
     return this.user.filter(l => l.assignedTo._id === data._id);
@@ -51,15 +64,15 @@ export class LeadListComponent implements OnInit {
     this.editleads = val;
     this.showModal = true
   }
-  deleteLead(lead:any){
+  deleteLead(lead: any) {
     this.loader = true;
-    this.api.deleteApi('/leads/'+lead._id).subscribe((res:any)=>{
+    this.api.deleteApi('/leads/' + lead._id).subscribe((res: any) => {
       this.loader = false;
-      if(res && !res.error){
-        this.api.show('success',res.message);
+      if (res && !res.error) {
+        this.api.show('success', res.message);
         this.getleads('/leads')
-      }else{
-        this.api.show('error',res.message);
+      } else {
+        this.api.show('error', res.message);
       }
     })
   }
@@ -73,51 +86,52 @@ export class LeadListComponent implements OnInit {
   }
   exportToExcel(): void {
     const formattedLeads = this.leads.map((lead: any) => ({
-    Name: lead.name,
-    Phone: lead.phone,
-    Email: lead.email,
-    Source: lead.source,
-    Status: lead.status,
-    Budget: lead.budget,
-    Remark:lead.notes,
-    callTrack:lead.call_track,
-    whatsAppTrack:lead.whatsapp_track,
-    AssignedTo: lead.assignedTo?.name || '-', // ✅ Fix here
-    Role: lead.assignedTo?.role || '-',
-    FollowUp: lead.followUp ? new Date(lead.followUp).toLocaleDateString() : '-',
-    Time:lead.time,
-    CreatedAt: new Date(lead.createdAt).toLocaleDateString(),
-  }));
-    
-  const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedLeads);
-  const workbook: XLSX.WorkBook = {
-    Sheets: { 'Leads': worksheet },
-    SheetNames: ['Leads']
-  };
-  const excelBuffer: any = XLSX.write(workbook, {
-    bookType: 'xlsx',
-    type: 'array'
-  });
+      Name: lead.name,
+      Phone: lead.phone,
+      Email: lead.email,
+      Source: lead.source,
+      Status: lead.status,
+      Budget: lead.budget,
+      Remark: lead.notes,
+      callTrack: lead.call_track,
+      whatsAppTrack: lead.whatsapp_track,
+      AssignedTo: lead.assignedTo?._id || '-',
+      EmployeeName: lead.assignedTo?.name || '-',// ✅ Fix here
+      Role: lead.assignedTo?.role || '-',
+      FollowUp: lead.followUp ? new Date(lead.followUp).toLocaleDateString() : '-',
+      Time: lead.time,
+      CreatedAt: new Date(lead.createdAt).toLocaleDateString(),
+    }));
 
-  const blob = new Blob([excelBuffer], {
-    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  });
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedLeads);
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Leads': worksheet },
+      SheetNames: ['Leads']
+    };
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
 
-  saveAs(blob, `Leads_${new Date().getTime()}.xlsx`);
-}
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
 
-// exportPNG() {
-//   const target = document.getElementById('lead-export-area');
+    saveAs(blob, `Leads_${new Date().getTime()}.xlsx`);
+  }
 
-//   if (!target) return;
+  // exportPNG() {
+  //   const target = document.getElementById('lead-export-area');
 
-//   html2canvas(target, { scale: 2 }).then(canvas => {
-//     const imageUrl = canvas.toDataURL('image/png');
+  //   if (!target) return;
 
-//     const link = document.createElement('a');
-//     link.href = imageUrl;
-//     link.download = `Leads_${Date.now()}.png`;
-//     link.click();
-//   });
-// }
+  //   html2canvas(target, { scale: 2 }).then(canvas => {
+  //     const imageUrl = canvas.toDataURL('image/png');
+
+  //     const link = document.createElement('a');
+  //     link.href = imageUrl;
+  //     link.download = `Leads_${Date.now()}.png`;
+  //     link.click();
+  //   });
+  // }
 }

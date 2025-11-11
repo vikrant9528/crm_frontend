@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../services/api.service";
 
 @Component({
+  standalone: false,
   selector: 'app-snack',
   template: `
     <div
@@ -20,7 +21,7 @@ import { ApiService } from "../services/api.service";
 export class SnackComponent implements OnInit {
   toast: { type: 'success' | 'error', msg: string } | null = null;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   ngOnInit(): void {
     this.api.toast$.subscribe(t => {

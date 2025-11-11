@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'indianNumber' })
+@Pipe({ standalone: false, name: 'indianNumber' })
 export class IndianNumberPipe implements PipeTransform {
   transform(value: string | number | null | undefined): number {
     // handle null/undefined/empty

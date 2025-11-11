@@ -20,7 +20,15 @@
     <!-- Centered Form -->
     <div class="flex flex-1 items-center justify-center px-4 py-6 relative z-10">
         <div class="max-w-2xl w-full bg-transparent backdrop-blur-md rounded-lg shadow-lg p-6 relative z-10">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-900">Add Lead</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-900">Add Lead</h2>
+                <input #excelInput type="file" class="hidden" (change)="onFileChange($event)"
+                    accept=".xlsx, .xls, .csv">
+                <button *ngIf="role.role == 'admin'" (click)="excelInput.click()"
+                    class="px-2 bg-gray-800 text-white py-2 rounded-md hover:bg-gray-900 transition">
+                    Import Excel
+                </button>
+            </div>
 
             <form [formGroup]="leadForm" (ngSubmit)="submit()" class="space-y-4">
                 <!-- Name -->
@@ -89,7 +97,7 @@
                         <input type="date" formControlName="followUp"
                             class="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" />
                     </div>
-                           <div>
+                    <div>
                         <label class="block text-white text-sm mb-1">Time</label>
                         <input formControlName="time" type="time"
                             class="w-full p-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500" />
@@ -106,7 +114,7 @@
 
                 <!-- Submit Button -->
                 <div class="flex justify-end">
-                    <button type="submit" 
+                    <button type="submit"
                         class="px-4 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition">Save
                         Lead</button>
                 </div>
