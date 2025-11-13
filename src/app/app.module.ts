@@ -23,6 +23,8 @@ import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
 
 
 
+
+
 @NgModule({
   declarations: [AppComponent, LeadAddComponent, LeadListComponent, SignupComponent, LoginComponent, ModalComponent, IndianNumberPipe, NavbarComponent, FollowupComponent, LoaderComponent, SnackComponent, DashboardComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, HttpClientModule, DragDropModule, HammerModule, CdkVirtualScrollableElement, WebcamModule],

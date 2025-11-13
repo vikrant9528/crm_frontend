@@ -17,7 +17,7 @@ export class FollowupComponent implements OnInit {
   swipeDirection: 'left' | 'right' | null = null;
   loader: boolean = false;
   showFull: Record<string, boolean> = {};
-
+  searchText:any = '';
   constructor(private _api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
@@ -47,6 +47,14 @@ export class FollowupComponent implements OnInit {
         this._api.show('error', res.message)
       }
     });
+  }
+    get filteredLeads() {
+    if (!this.searchText) return this.followups[this.activeTab];
+    const t = this.searchText.toLowerCase();
+    return this.followups[this.activeTab].filter(
+      l =>
+        l.name?.toLowerCase().includes(t) || l.assignedTo?.name?.toLowerCase().includes(t)
+    );
   }
 
   tabs = [
